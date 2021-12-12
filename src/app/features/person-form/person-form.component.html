@@ -1,0 +1,39 @@
+<mat-card>
+    <mat-card-title>{{isSearch ? 'Search a person':'Enter data for a person!'}}</mat-card-title>
+    <form [formGroup]='personForm'>
+        <div fxLayout="column">
+            <div fxLayout="row" fxLayoutGap='15px' fxFlex='100'>
+                <mat-form-field fxFlex='50' class='col-sm-4' appearance="standard">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName='name' [required]='!isSearch' OnlyText>
+                    <mat-error>Field is required</mat-error>
+                </mat-form-field>
+                <mat-form-field fxFlex='50' appearance="standard">
+                    <mat-label>Surname</mat-label>
+                    <input matInput formControlName='lastName' [required]='!isSearch' OnlyText>
+                    <mat-error>Field is required</mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row">
+                <mat-form-field appearance="standard" fxFlex='100'>
+                    <mat-label>Personal identification number</mat-label>
+                    <input matInput formControlName='pin' [required]='!isSearch' PinInput
+                        pattern="^(\d{10}|\d{12}|\d{6}-\d{4}|\d{8}-\d{4}|\d{8} \d{4}|\d{6} \d{4})">
+                    <mat-error *ngIf="patternError('pin')">Field is invalid</mat-error>
+                    <mat-error *ngIf="requiredError('pin')">Field is required</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div fxLayout='row' fxLayoutAlign='end' fxLayoutGap='15px'>
+            <button mat-raised-button color='warn' *ngIf='!isSearch' (click)='cancel()' type="button">Cancel</button>
+            <button mat-raised-button color='warn' type="button"
+                *ngIf='
+                isSearch&&
+                (personForm.controls.name.value || personForm.controls.lastName.value || personForm.controls.pin.value)' (click)='cancel()'>
+                Clear filter <mat-icon style="font-size: 20px;">clear</mat-icon></button>
+            <button type="submit" mat-raised-button color='primary' (debounceClick)='submit()' DebounceClick [debounceTime]='250'>
+                {{isSearch ? 'Search':'Submit'}} <mat-icon style="font-size: 20px;" *ngIf='isSearch'>search</mat-icon>
+            </button>
+        </div>
+    </form>
+</mat-card>

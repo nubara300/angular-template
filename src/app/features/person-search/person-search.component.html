@@ -1,0 +1,56 @@
+<div fxFlex=100 fxLayoutAlign='center center'>
+    <div fxFlex='80'>
+        <app-person-form [isSearch]='true' (emitSearch)='search($event)'></app-person-form>
+        <mat-card style="margin-top: 10px;">
+            <div class="">
+                <button mat-raised-button color='primary' (click)='openDetails(0)' style="float:right">Add Person
+                    <mat-icon>person</mat-icon>
+                </button>
+                <table mat-table [dataSource]="dataSource" style="width: 100%;">
+
+                    <!-- Position Column -->
+                    <ng-container *ngFor="let column of displayedColumns;" matColumnDef="{{column.key}}">
+                        <th mat-header-cell *matHeaderCellDef> {{column.title}} </th>
+                        <td mat-cell *matCellDef="let element"> {{element[column.key]}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dateCreated">
+                        <th mat-header-cell *matHeaderCellDef> Date created </th>
+                        <td mat-cell *matCellDef="let element"> {{element.dateCreated | date: 'dd.MM.yyy hh:mm:ss'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="dateModified">
+                        <th mat-header-cell *matHeaderCellDef> Date modified </th>
+                        <td mat-cell *matCellDef="let element"> {{element.dateModified | date: 'dd.MM.yyy hh:mm:ss'}}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td mat-cell *matCellDef="let element">
+                            <button matTooltip="Edit" mat-icon-button mat-sm-button color="primary" class="mr-1"
+                                (click)="openDetails(element.id)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button matTooltip="Delete" mat-icon-button mat-sm-button color="warn" class="mr-1"
+                                (click)="deleteItem(element.id)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnNames"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnNames;"></tr>
+
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="7">No data matching the filter</td>
+                    </tr>
+                </table>
+                <div *ngIf="showLoader">
+                    <mat-progress-bar mode="indeterminate" color="warn" class="loader-progress"></mat-progress-bar>
+                </div>
+                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons [length]="totalElements"
+                    aria-label="Select page of periodic elements">
+                </mat-paginator>
+            </div>
+        </mat-card>
+    </div>
+</div>
